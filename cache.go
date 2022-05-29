@@ -1,6 +1,5 @@
 package cache
 
-
 type Cache[K comparable, V any] struct {
 	capacity int
 	list List[v]
@@ -57,6 +56,24 @@ func (c *Cache[K, V]) Get(k K) (V, bool) {
 	return v, false
 }
 
+// Size returns size of the cache
+func (c *Cache[K, V]) Size() int {
+	return len(t.table)
+}
+
+// Capacity returns capacity of the cache
+func (c *Cache[K, V]) Capacity() int {
+	return t.capacity
+}
+
+// Remove provides removing from cache
+func (c *Cache[K, V]) Remove(k K) {
+	if n, ok := t.table[k]; ok {
+		t.list.Remove(n)
+		delete(t.table, k)
+	}
+}
+
 func (c *Cache[K, V]) evict() {
 	entry := c.list.Back.Value
 	if c.evictCb != nil {
@@ -65,3 +82,5 @@ func (c *Cache[K, V]) evict() {
 	c.list.Remove(c.list.Back)
 	delete(c.table, entry.Key)
 }
+
+

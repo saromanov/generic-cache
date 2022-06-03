@@ -6,7 +6,7 @@ type Node[V any] struct {
 }
 
 type List[V any] struct {
-	Top, Back *Node[v]
+	Top, Back *Node[V]
 }
 
 func NewList[V any]()*List[V]{
@@ -20,7 +20,7 @@ func (l *List[V]) PushBack(v V) {
 }
 
 func (l *List[V]) PushFront(v V) {
-	l.PushFrontNode(&Node[V]{
+	l.PushTopNode(&Node[V]{
 		Value: v,
 	})
 }
@@ -31,20 +31,20 @@ func (l *List[V]) PushBackNode(n *Node[V]) {
 	if l.Back != nil {
 		l.Back.Next = n
 	} else {
-		l.Front = n
+		l.Top = n
 	}
 	l.Back = n
 }
 
 func (l *List[V]) PushTopNode(n *Node[V]) {
-	n.Next = l.Front
+	n.Next = l.Top
 	n.Prev = nil
-	if l.Front != nil {
-		l.Front.Prev = n
+	if l.Top != nil {
+		l.Top.Prev = n
 	} else {
 		l.Back = n
 	}
-	l.Front = n
+	l.Top = n
 }
 
 func (l *List[V]) Remove(n *Node[V]) {
@@ -56,7 +56,7 @@ func (l *List[V]) Remove(n *Node[V]) {
 	if n.Prev != nil {
 		n.Prev.Next = n.Next
 	} else {
-		l.Front = n.Next
+		l.Top = n.Next
 	}
 }
 

@@ -1,8 +1,10 @@
 package cache
 
+import "fmt"
+
 type Cache[K comparable, V any] struct {
 	capacity int
-	list List[KV[K,V]]
+	list     List[KV[K, V]]
 	table    map[K]*Node[KV[K, V]]
 	evictCb  func(key K, val V)
 }
@@ -16,7 +18,7 @@ type KV[K comparable, V any] struct {
 func New[K comparable, V any](capacity int) *Cache[K, V] {
 	return &Cache[K, V]{
 		capacity: capacity,
-		list:      List[KV[K, V]]{},
+		list:     List[KV[K, V]]{},
 		table:    make(map[K]*Node[KV[K, V]]),
 	}
 }
@@ -67,11 +69,13 @@ func (c *Cache[K, V]) Capacity() int {
 }
 
 // Remove provides removing from cache
-func (c *Cache[K, V]) Remove(k K) {
+func (c *Cache[K, V]) Remove(k K) error {
 	if n, ok := c.table[k]; ok {
 		c.list.Remove(n)
 		delete(c.table, k)
+		return nil
 	}
+	return fmt.Errorf("key is not found")
 }
 
 func (c *Cache[K, V]) evict() {
@@ -82,5 +86,3 @@ func (c *Cache[K, V]) evict() {
 	c.list.Remove(c.list.Back)
 	delete(c.table, entry.Key)
 }
-
-
